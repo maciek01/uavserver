@@ -1,0 +1,26 @@
+server:
+  port: 9000
+  loglevel: info
+
+
+data:
+  basepath: data
+
+common:
+  postgresPort: 5432
+  apiPrefix: "/uavserver/v1"
+
+db:
+  pi:
+    user: "pi"
+    database: "pi"
+    password: "postgres"
+    host: "localhost"
+    port: 5432
+  localhost:
+    user: "postgres"
+    database: "test"
+    password: "password"
+    host: "localhost"
+    port: 5432
+

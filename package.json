@@ -4,6 +4,7 @@
   "description": "UAV server",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "test"
   },
   "repository": {
@@ -25,6 +26,23 @@
   },
   "homepage": "https://github.com/maciek01/uavserver#readme",
   "dependencies": {
-    "express": "^4.16.2"
+    "errorhandler": "^1.5.0",
+    "express": "^4.16.2",
+    "fs-extra": "^2.1.2",
+    "method-override": "^2.3.10",
+    "morgan": "^1.9.0",
+    "nconf": "^0.8.5",
+    "nconf-yaml": "^1.0.2",
+    "optimist": "^0.6.1",
+    "q": "^1.5.1",
+    "ramda": "^0.24.1",
+    "request": "^2.83.0",
+    "serve-favicon": "^2.4.5",
+    "serve-static": "^1.13.1",
+    "simple-node-logger": "^0.93.33",
+    "swagger-jsdoc": "^1.9.7",
+    "swagger-parser": "^3.4.2",
+    "swagger-ui-express": "^2.0.11",
+    "uuid": "^3.1.0"
   }
 }
