@@ -1,0 +1,30 @@
+{
+  "name": "uavserver",
+  "version": "1.0.0",
+  "description": "UAV server",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maciek01/uavserver.git"
+  },
+  "keywords": [
+    "uav",
+    "gprs",
+    "autonomous",
+    "3g",
+    "4g",
+    "lte"
+  ],
+  "author": "maciek kolesnik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maciek01/uavserver/issues"
+  },
+  "homepage": "https://github.com/maciek01/uavserver#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
