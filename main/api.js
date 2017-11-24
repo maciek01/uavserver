@@ -10,6 +10,8 @@ var router = express.Router();
 var conf = require('./conf/conf');
 var logger = require('./logger/logger').logger;
 var service = require("./service");
+const apidefs = require('./helpers/apidefs');
+const apiHelpers = require('./helpers/apihelpers');
 
 // API DEFINITION ///////////////////////////////////////////////////////// //
 
@@ -108,7 +110,6 @@ var service = require("./service");
  */
 router.post('/heartbeat', function(req, res) {
     apiHelpers.traceAPIRequest(req);
-    if(!apiHelpers.preprocessRequest(req,res,[],[])) return;
 
     try {
         service.createHeartbeat(req,res);
