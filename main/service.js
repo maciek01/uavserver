@@ -33,10 +33,8 @@ class Service {
             let heartbeat = req.body;
 
             heartbeat.unitHostAddress = req.log.clientip;
-            logger.info(JSON.stringify(req.body));
 
             let lastHeartbeat = this.activeUnits[heartbeat.unitId];
-
 
             if (lastHeartbeat == null) {
                 lastHeartbeat = {

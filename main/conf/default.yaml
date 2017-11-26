@@ -1,6 +1,6 @@
 server:
   port: 9000
-  loglevel: info
+  logLevel: trace
 
 
 data:

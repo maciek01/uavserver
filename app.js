@@ -82,13 +82,11 @@ app.get('/info', function (req, res) {
 });
 
 app.get('/settings', function (req, res) {
-    app.get('/settings', function (req, res) {
-        let settings = {};
-        for (let [k, v] of conf) {
-            settings[k] = v;
-        }
-        res.json(settings);
-    });
+    let settings = {};
+    for (let [k, v] of conf) {
+        settings[k] = v;
+    }
+    res.json(settings);
 });
 
 // SWAGGER-JSDOC Initialization

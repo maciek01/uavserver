@@ -1,4 +1,5 @@
 
+docker container stop pi-uavserver
 docker container rm pi-uavserver
 docker image rm uavserver
 docker build -t uavserver .
