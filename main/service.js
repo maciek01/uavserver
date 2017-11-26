@@ -56,7 +56,7 @@ class Service {
 
                 lastHeartbeat.id = ++this.idCounter;//generate request id
                 lastHeartbeat.receivedTimestampMS = new Date().getTime();
-                lastHeartbeat.heartbeat = {}; //currentHeartbeat;
+                lastHeartbeat.heartbeat = currentHeartbeat;
             }
 
             //fetch commands from the command queue
@@ -66,7 +66,10 @@ class Service {
                 lastHeartbeat.actionRequests = {};
             }
 
-            return apiHelpers.sendSuccess(req, res, lastHeartbeat);
+            let returnData = JSON.parse(JSON.stringify(lastHeartbeat));
+            returnData.heartbeat = {}; //minimize return payload to uav
+
+            return apiHelpers.sendSuccess(req, res, returnData);
 
         } catch (e) {
             logger.error("Error processing create heartbeat: ", e);
