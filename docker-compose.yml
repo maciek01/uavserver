@@ -1,0 +1,12 @@
+
+##docker-compose.yml
+app:
+  image: node:latest ## node.js
+  volumes:           ## adds app folder to the container
+   - ./:/app
+  ports:             ## publish ports
+   - "9000:9000"
+  working_dir: /app         ## uses work dir /app
+  entrypoint: node app.js   ## starts application
+
+
