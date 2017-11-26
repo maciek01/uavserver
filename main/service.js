@@ -56,7 +56,7 @@ class Service {
 
                 lastHeartbeat.id = ++this.idCounter;//generate request id
                 lastHeartbeat.receivedTimestampMS = new Date().getTime();
-                lastHeartbeat.heartbeat = currentHeartbeat;
+                lastHeartbeat.heartbeat = {}; //currentHeartbeat;
             }
 
             //fetch commands from the command queue
