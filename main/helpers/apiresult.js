@@ -13,6 +13,9 @@ function apiResult(code,httpcode,message,data,error) {
 
     // this.result will be sent as a response
     this.result = {code:this.code};
+    if ( this.error ) {
+        this.result.detail = {message:this.message,error:this.error};
+    }
     if( this.data ) this.result.data = this.data;
 }
 

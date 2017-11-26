@@ -50,6 +50,7 @@ exports.handleResult = function (req, res, result) {
     if (result instanceof apiResult) {
         module.exports.sendAPIResult(req, res, result);
     } else if (result instanceof Error) {
+        logger.error(result.message, result);
         module.exports.traceAPI(req, 'EXCEPTION: ' + result.message + ', STACK:\n' + result.stack);
         module.exports.sendAPIResult(req, res, new apiResult(apidefs.API_CODES.FAIL, 500, result.message, null, 'Failed to process request: ' + result.message));
     } else {

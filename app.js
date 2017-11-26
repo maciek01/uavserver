@@ -68,6 +68,8 @@ if (env === 'development') {
 app.use(function (req, res, next) {
     res.set('Cache-Control', 'private');
     res.set('Expires', new Date(Date.now() - 1000).toUTCString());
+    res.set('Access-Control-Allow-Origin', '*');
+
     next();
 });
 

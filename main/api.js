@@ -71,6 +71,8 @@ const apiHelpers = require('./helpers/apihelpers');
 // API METHODS //////////////////////////////////////////////////////////// //
 
 
+// UNIT/UAV HEARTBEATS
+
 /**
  * @swagger
  *  /heartbeat:
@@ -110,13 +112,254 @@ const apiHelpers = require('./helpers/apihelpers');
  */
 router.post('/heartbeat', function(req, res) {
     apiHelpers.traceAPIRequest(req);
-
     try {
         service.createHeartbeat(req,res);
     }catch(e) {
         apiHelpers.handleException(req,res,e);
     }
 });
+
+
+/**
+ * @swagger
+ *  /heartbeats:
+ *    get:
+ *      operationId: get all active heartbeats
+ *      description: return all current uav heartbeats
+ *      summary: return all current uav heartbeats
+ *      tags:
+ *        - heartbeat
+ *      produces:
+ *        - application/json
+ *      responses:
+ *        '200':
+ *          description: return action request array or nothing
+ *          schema:
+ *            type: object
+ *            required:
+ *              - code
+ *            properties:
+ *              code:
+ *                type: integer
+ *                description: Operation status code
+ *              data:
+ *                description: action requests to be processed by uav
+ *                $ref: '#/definitions/heartbeatswrapper'
+ *        default:
+ *          description: error
+ *          schema:
+ *            $ref: '#/definitions/errorModel'
+ */
+router.get('/heartbeats', function(req, res) {
+    apiHelpers.traceAPIRequest(req);
+    try {
+        service.listHeartbeats(req,res);
+    }catch(e) {
+        apiHelpers.handleException(req,res,e);
+    }
+});
+
+
+/**
+ * @swagger
+ *  /heartbeat/{unitId}:
+ *    get:
+ *      operationId: get active heartbeat
+ *      description: return current uav heartbeat
+ *      summary: return current uav heartbeat
+ *      tags:
+ *        - heartbeat
+ *      produces:
+ *        - application/json
+ *      parameters:
+ *        - name: unitId
+ *          in: path
+ *          type: string
+ *          description: Uav ID
+ *          required: true
+ *      responses:
+ *        '200':
+ *          description: return action request array or nothing
+ *          schema:
+ *            type: object
+ *            required:
+ *              - code
+ *            properties:
+ *              code:
+ *                type: integer
+ *                description: Operation status code
+ *              data:
+ *                description: action requests to be processed by uav
+ *                $ref: '#/definitions/heartbeatwrapper'
+ *        default:
+ *          description: error
+ *          schema:
+ *            $ref: '#/definitions/errorModel'
+ */
+router.get('/heartbeat/:unitId', function(req, res) {
+    apiHelpers.traceAPIRequest(req);
+    try {
+        service.getHeartbeat(req,res);
+    }catch(e) {
+        apiHelpers.handleException(req,res,e);
+    }
+});
+
+
+
+
+// UI ACTIONS
+
+/**
+ * @swagger
+ *  /action:
+ *    post:
+ *      operationId: add actionrequest to vehicle's queue
+ *      description: Create new actionrequest
+ *      summary: Create Action Request
+ *      tags:
+ *        - actionrequest
+ *      produces:
+ *        - application/json
+ *      parameters:
+ *        - name: actionrequest
+ *          in: body
+ *          description: heartbeat to be created
+ *          required: true
+ *          schema:
+ *            $ref: '#/definitions/actionrequest'
+ *      responses:
+ *        '200':
+ *          description: return action request array or nothing
+ *          schema:
+ *            type: object
+ *            required:
+ *              - code
+ *            properties:
+ *              code:
+ *                type: integer
+ *                description: Operation status code
+ *        default:
+ *          description: error
+ *          schema:
+ *            $ref: '#/definitions/errorModel'
+ */
+router.post('/action', function(req, res) {
+    apiHelpers.traceAPIRequest(req);
+    try {
+        service.addActionRequest(req, res);
+    } catch (e) {
+        apiHelpers.handleException(req,res,e);
+    }
+});
+
+
+/**
+ * @swagger
+ *  /actions/{unitId}:
+ *    get:
+ *      operationId: get all active action requests for a vehicle
+ *      description: return current uav action requests
+ *      summary: return current uav action requests
+ *      tags:
+ *        - actionrequest
+ *      produces:
+ *        - application/json
+ *      parameters:
+ *        - name: unitId
+ *          in: path
+ *          type: string
+ *          description: Uav ID
+ *          required: true
+ *      responses:
+ *        '200':
+ *          description: return action request array or nothing
+ *          schema:
+ *            type: object
+ *            required:
+ *              - code
+ *            properties:
+ *              code:
+ *                type: integer
+ *                description: Operation status code
+ *              data:
+ *                type: array
+ *                description: action requests to be processed by uav
+ *                items:
+ *                  $ref: '#/definitions/actionrequest'
+ *        default:
+ *          description: error
+ *          schema:
+ *            $ref: '#/definitions/errorModel'
+ */
+router.get('/actions/:unitId', function(req, res) {
+    apiHelpers.traceAPIRequest(req);
+    try {
+        service.listAllActionRequests(req, res);
+    } catch (e) {
+        apiHelpers.handleException(req,res,e);
+    }
+});
+
+
+var deleteActions = function(req, res) {
+    apiHelpers.traceAPIRequest(req);
+    try {
+        service.removeAllActionRequests(req, res);
+    } catch (e) {
+        apiHelpers.handleException(req, res, e);
+    }
+}
+
+/**
+ * @swagger
+ *  /actions/{unitId}:
+ *    delete:
+ *      operationId: delete all active action requests for a vehicle
+ *      description: delete current uav action requests
+ *      summary: delete current uav action requests
+ *      tags:
+ *        - actionrequest
+ *      produces:
+ *        - application/json
+ *      parameters:
+ *        - name: unitId
+ *          in: path
+ *          type: string
+ *          description: Uav ID
+ *          required: true
+ *      responses:
+ *        '200':
+ *          description: return action request array or nothing
+ *        default:
+ *          description: error
+ */
+router.delete('/actions/:unitId', deleteActions);
+
+/**
+ * @swagger
+ *  /actions/delete/{unitId}:
+ *    get:
+ *      operationId: delete all active action requests for a vehicle
+ *      description: delete current uav action requests
+ *      summary: delete current uav action requests
+ *      tags:
+ *        - actionrequest
+ *      produces:
+ *        - application/json
+ *      parameters:
+ *        - name: unitId
+ *          in: path
+ *          type: string
+ *          description: Uav ID
+ *          required: true
+ *      responses:
+ *        '200':
+ *          description: return action request array or nothing
+ *        default:
+ *          description: error
+ */
+router.get('/actions/delete/:unitId', deleteActions);
 
 
 /**
