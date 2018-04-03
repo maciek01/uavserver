@@ -1,4 +1,5 @@
-FROM node:latest
+#FROM node:latest
+FROM resin/raspberry-pi-alpine-node
 
 # Create app directory
 WORKDIR /app
