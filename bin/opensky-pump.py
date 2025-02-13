@@ -26,7 +26,7 @@ getAdsbsUrl = 'https://opensky-network.org/api/states/all?'
 def processAdsb(unitId, adsbs):
 
 
-	#print(unitId, adsbs)
+	print("Process adsb for unit " + unitId)
 
 	update = {
 		"unitId": unitId,

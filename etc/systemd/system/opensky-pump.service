@@ -5,13 +5,13 @@ After=multi-user.target
 
 [Service]
 User=root
-WorkingDirectory=/path/to/your/script/directory/
+WorkingDirectory=/home/pi/uavserver/bin
 Restart=on-failure
 RestartSec=5s
-ExecStart=/usr/bin/python3 your_script.py
-StandardOutput=append:/var/log/your_script.log
-StandardError=append:/var/log/your_script.log
-SyslogIdentifier=coolawesomescript
+ExecStart=/usr/bin/python3 opensky-pump.py
+StandardOutput=append:/var/log/opensky-pump.log
+StandardError=append:/var/log/opensky-pump.log
+SyslogIdentifier=opensky-pump
 
 [Install]
 WantedBy=multi-user.target
