@@ -1,0 +1,17 @@
+
+[Unit]
+Description=Sends opensky data to uavserver
+After=multi-user.target
+
+[Service]
+User=root
+WorkingDirectory=/path/to/your/script/directory/
+Restart=on-failure
+RestartSec=5s
+ExecStart=/usr/bin/python3 your_script.py
+StandardOutput=append:/var/log/your_script.log
+StandardError=append:/var/log/your_script.log
+SyslogIdentifier=coolawesomescript
+
+[Install]
+WantedBy=multi-user.target
