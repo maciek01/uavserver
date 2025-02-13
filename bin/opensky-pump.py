@@ -4,6 +4,7 @@ import traceback
 import time
 import requests
 #import json
+from opensky_api import OpenSkyApi
 
 
 
@@ -17,9 +18,10 @@ getHeartbeatsUrl = 'http://home.kolesnik.org:9091/uavserver/v1/heartbeats'
 postAdsbUrl = 'http://home.kolesnik.org:9091/uavserver/v1/adsb'
 
 
-getAdsbsUrl = 'https://opensky-network.org/api/states/all?'
+getAdsbsUrl = 'https://maciek:maciek@opensky-network.org/api/states/all?'
 
-
+#osApi = OpenSkyApi("", "")
+#osApi = OpenSkyApi()
 
 
 
@@ -62,14 +64,28 @@ def processHeartbeat(heartbeat):
 
 		url = getAdsbsUrl + 'lamin=' + str(lamin) + '&lomin=' + str(lomin) + '&lamax=' + str(lamax) + '&lomax=' + str(lomax)
 
-		#print(url)
+		print(url)
 
 		try:
 			adsbs = requests.get(url, timeout=5)
-
 			if adsbs.status_code == 200 and adsbs.ok:
-
+				print(adsbs.json())
 				processAdsb(unitId, adsbs.json())
+			else:
+				print("error from OpenSky ", adsbs.status_code)
+
+			#API WAY
+			#states = osApi.get_states(time_secs=0, icao24=None, bbox=(lamin, lamax, lomin, lomax))
+
+			#print(states)
+			#if states != None:
+				#for s in states.states:
+				#	print("(%r, %r, %r, %r)" % (s.longitude, s.latitude, s.baro_altitude, s.velocity))
+
+				#print(states["states"])
+
+			#else:
+				#print("no sttes")
 
 		except requests.RequestException:
 			traceback.print_exc()
@@ -99,7 +115,7 @@ while True:
 		traceback.print_exc()
 
 
-	time.sleep(5)
+	time.sleep(30)
 
 
 
