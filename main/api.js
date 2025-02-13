@@ -47,6 +47,8 @@ const apiHelpers = require('./helpers/apihelpers');
  *        description: Additional data associated with error
  *  heartbeat:
  *    type: object
+ *  adsb:
+ *    type: object
  *  actionrequest:
  *    type: object
  *  heartbeatwrapper:
@@ -65,6 +67,18 @@ const apiHelpers = require('./helpers/apihelpers');
  *        type: array
  *        items:
  *          $ref: '#/definitions/heartbeatwrapper'
+ *  adsbwrapper:
+ *    type: object
+ *    properties:
+ *      adsb:
+ *        $ref: '#/definitions/adsb'
+ *  adsbswrapper:
+ *    type: object
+ *    properties:
+ *      adsbs:
+ *        type: array
+ *        items:
+ *          $ref: '#/definitions/adsbwrapper'
  */
 
 
@@ -206,7 +220,138 @@ router.get('/heartbeat/:unitId', function(req, res) {
 });
 
 
+// UNIT/UAV ADSBS
 
+/**
+ * @swagger
+ *  /adsb:
+ *    post:
+ *      operationId: create adsb
+ *      description: Create new adsb
+ *      summary: Create Adsb
+ *      tags:
+ *        - adsb
+ *      produces:
+ *        - application/json
+ *      parameters:
+ *        - name: adsb
+ *          in: body
+ *          description: adsb to be created
+ *          required: true
+ *          schema:
+ *            $ref: '#/definitions/adsb'
+ *      responses:
+ *        '200':
+ *          description: return action request array or nothing
+ *          schema:
+ *            type: object
+ *            required:
+ *              - code
+ *            properties:
+ *              code:
+ *                type: integer
+ *                description: Operation status code
+ *              data:
+ *                description: action requests to be processed by uav
+ *                $ref: '#/definitions/adsbwrapper'
+ *        default:
+ *          description: error
+ *          schema:
+ *            $ref: '#/definitions/errorModel'
+ */
+router.post('/adsb', function(req, res) {
+    apiHelpers.traceAPIRequest(req);
+    try {
+        service.createAdsb(req,res);
+    }catch(e) {
+        apiHelpers.handleException(req,res,e);
+    }
+});
+
+
+/**
+ * @swagger
+ *  /adsbs:
+ *    get:
+ *      operationId: get all active adsbs
+ *      description: return all current uav adsbs
+ *      summary: return all current uav adsbs
+ *      tags:
+ *        - adsb
+ *      produces:
+ *        - application/json
+ *      responses:
+ *        '200':
+ *          description: return action request array or nothing
+ *          schema:
+ *            type: object
+ *            required:
+ *              - code
+ *            properties:
+ *              code:
+ *                type: integer
+ *                description: Operation status code
+ *              data:
+ *                description: action requests to be processed by uav
+ *                $ref: '#/definitions/adsbswrapper'
+ *        default:
+ *          description: error
+ *          schema:
+ *            $ref: '#/definitions/errorModel'
+ */
+router.get('/adsbs', function(req, res) {
+    apiHelpers.traceAPIRequest(req);
+    try {
+        service.listAdsbs(req,res);
+    }catch(e) {
+        apiHelpers.handleException(req,res,e);
+    }
+});
+
+/**
+ * @swagger
+ *  /adsb/{unitId}:
+ *    get:
+ *      operationId: get active adsb
+ *      description: return current uav adsb
+ *      summary: return current uav adsb
+ *      tags:
+ *        - adsb
+ *      produces:
+ *        - application/json
+ *      parameters:
+ *        - name: unitId
+ *          in: path
+ *          type: string
+ *          description: Uav ID
+ *          required: true
+ *      responses:
+ *        '200':
+ *          description: return action request array or nothing
+ *          schema:
+ *            type: object
+ *            required:
+ *              - code
+ *            properties:
+ *              code:
+ *                type: integer
+ *                description: Operation status code
+ *              data:
+ *                description: action requests to be processed by uav
+ *                $ref: '#/definitions/adsbwrapper'
+ *        default:
+ *          description: error
+ *          schema:
+ *            $ref: '#/definitions/errorModel'
+ */
+router.get('/adsb/:unitId', function(req, res) {
+    apiHelpers.traceAPIRequest(req);
+    try {
+        service.getAdsb(req,res);
+    }catch(e) {
+        apiHelpers.handleException(req,res,e);
+    }
+});
 
 // UI ACTIONS
 

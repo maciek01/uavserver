@@ -17,6 +17,9 @@ class Service {
 
         // actions
         this.requestQueues = [];
+
+        // adsb targets - each entry is a list of adsbs in the vivinity of a uav unit - map by unitId
+        this.adsbs = [];
     }
 
     init() {
@@ -48,6 +51,7 @@ class Service {
             } else {
                 let currentHeartbeat = JSON.parse(JSON.stringify(lastHeartbeat.heartbeat));
 
+                //in place copy
                 for (var key in heartbeat) {
                     if (heartbeat.hasOwnProperty(key)) {
                         currentHeartbeat[key] = heartbeat[key];
@@ -78,6 +82,40 @@ class Service {
 
     }
 
+    //create an adsb entry for unit - list of adbs in vicinity of the uav
+    createAdsb(req, res) {
+
+        try {
+
+            let adsb = req.body;
+
+            let lastAdsb = this.adsbs[adsb.unitId];
+
+            if (lastAdsb == null) {
+                lastAdsb = {
+                    receivedTimestampMS: new Date().getTime(),
+                    adsb: adsb
+                };
+
+                this.adsbs[adsb.unitId] = lastAdsb;
+
+            } else {
+                lastAdsb.receivedTimestampMS = new Date().getTime();
+                lastAdsb.adsb = adsb;
+            }
+
+            let returnData = JSON.parse(JSON.stringify(lastAdsb));
+            returnData.adsb = {}; //minimize return payload to uav
+
+            return apiHelpers.sendSuccess(req, res, returnData);
+
+        } catch (e) {
+            logger.error("Error processing create adsb: ", e);
+            throw e;
+        }
+
+    }
+
     listHeartbeats(req,res) {
         try {
             let wrapper = {
@@ -98,10 +136,45 @@ class Service {
         }
     }
 
+    listAdsbs(req,res) {
+        try {
+            let wrapper = {
+                adsbs: []
+            };
+
+            for (var key in this.adsbs) {
+                if (this.adsbs.hasOwnProperty(key)) {
+                    wrapper.adsbs.push(this.adsbs[key]);
+                }
+            }
+
+            return apiHelpers.sendSuccess(req, res, wrapper);
+
+        } catch (e) {
+            logger.error("Error processing get adsbs: ", e);
+            throw e;
+        }
+    }
+
 
     getHeartbeat(req,res) {
         try {
             let unit = this.activeUnits[req.params.unitId];
+
+            if (!unit) {
+                //TODO return 404 code
+            }
+
+            return apiHelpers.sendSuccess(req, res, unit);
+        } catch (e) {
+            logger.error("Error processing get heartbeat: ", e);
+            throw e;
+        }
+    }
+
+    getAdsb(req,res) {
+        try {
+            let unit = this.adsbs[req.params.unitId];
 
             if (!unit) {
                 //TODO return 404 code
