@@ -58,7 +58,7 @@ def processHeartbeatAPL(heartbeat):
 
 	lat = beat["gpsLat"] if beat is not None else None
 	lon = beat["gpsLon"] if beat is not None else None
-
+	processedUnits = 0
 	if lat is not None and lon is not None:
 
 		url = getAdsbsUrlAPL + str(lat) + '/' + str(lon) + '/' + str(2 * RANGE_IN_NM)
@@ -67,29 +67,17 @@ def processHeartbeatAPL(heartbeat):
 
 		try:
 			adsbs = requests.get(url, timeout=5)
+			processedUnits += 1
 			if adsbs.status_code == 200 and adsbs.ok:
 				#print(adsbs.json())
 				processAdsb(unitId, adsbs.json())
 			else:
-				print("error from OpenSky ", adsbs.status_code)
-
-			#API WAY
-			#states = osApi.get_states(time_secs=0, icao24=None, bbox=(lamin, lamax, lomin, lomax))
-
-			#print(states)
-			#if states != None:
-				#for s in states.states:
-				#	print("(%r, %r, %r, %r)" % (s.longitude, s.latitude, s.baro_altitude, s.velocity))
-
-				#print(states["states"])
-
-			#else:
-				#print("no sttes")
+				print("error from APL ", adsbs.status_code)
 
 		except requests.RequestException:
 			traceback.print_exc()
 
-	return
+	return processedUnits
 
 def processHeartbeatOSRest(heartbeat):
 	
@@ -123,7 +111,7 @@ def processHeartbeatOSRest(heartbeat):
 		except requests.RequestException:
 			traceback.print_exc()
 
-	return
+	return 0
 
 def processHeartbeatOSApi(heartbeat):
 	
@@ -163,10 +151,10 @@ def processHeartbeatOSApi(heartbeat):
 		except requests.RequestException:
 			traceback.print_exc()
 
-	return
+	return 0
 
 while True:
-
+	processedUnits = 0
 	try:
 		heartbeatsResp = requests.get(getHeartbeatsUrl, timeout=1)
 		#x = requests.post(url, data = myobj, timeout=1)
@@ -178,16 +166,16 @@ while True:
 			heartbeats = heartbeatsResp.json()
 
 			for beat in heartbeats["data"]["heartbeats"]:
-				processHeartbeatAPL(beat)
-
-
-
+				units = processHeartbeatAPL(beat)
+				processedUnits += units
+				if units != 0:
+					time.sleep(1)
 
 	except Exception as e:
 		traceback.print_exc()
 
 
-	time.sleep(5)
+	time.sleep(5 - (units if units < 4 else 3))
 
 
 
