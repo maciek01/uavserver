@@ -1,0 +1,17 @@
+
+[Unit]
+Description=Sends adsb data to uavserver
+After=multi-user.target
+
+[Service]
+User=root
+WorkingDirectory=/home/pi/uavserver/bin
+Restart=on-failure
+RestartSec=5s
+ExecStart=/usr/bin/python3 adsb-pump.py
+StandardOutput=append:/var/log/adsb-pump.log
+StandardError=append:/var/log/adsb-pump.log
+SyslogIdentifier=adsb-pump
+
+[Install]
+WantedBy=multi-user.target

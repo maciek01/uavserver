@@ -11,10 +11,10 @@ sudo pip3 install --upgrade --no-cache-dir requests
 #cd opensky-api
 #pip3 install -e $PWD/python
 
-sudo rm -f /etc/systemd/system/opensky-pump.service
-sudo ln -s /home/pi/uavserver/etc/systemd/system/opensky-pump.service /etc/systemd/system/opensky-pump.service
+sudo rm -f /etc/systemd/system/adsb-pump.service
+sudo ln -s /home/pi/uavserver/etc/systemd/system/adsb-pump.service /etc/systemd/system/adsb-pump.service
 
-sudo systemctl start opensky-pump
+sudo systemctl start adsb-pump
 sudo systemctl daemon-reload
-sudo systemctl enable opensky-pump
-sudo systemctl start opensky-pump
+sudo systemctl enable adsb-pump
+sudo systemctl start adsb-pump
